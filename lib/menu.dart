@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:si_udin_app/menu.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -9,11 +8,11 @@ void main() {
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]);
-  runApp(const MyApp());
+  runApp(const MenuPage());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MenuPage extends StatelessWidget {
+  const MenuPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -194,11 +193,39 @@ class LandingPage extends StatelessWidget {
               ),
             ),
 
-            // Fence
+            // Start button (Mulai)
             Positioned(
-              left: size.width * 0.2,
-              bottom: size.height * 0.3,
-              child: _buildFence(size),
+              bottom: size.height * 0.18,
+              right: size.width * 0.2,
+              child: Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MenuSelectionScreen(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF88FF00),
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: size.width * 0.05,
+                        vertical: size.height * 0.02),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  child: Text(
+                    'Mulai',
+                    style: TextStyle(
+                      fontSize: size.height * 0.04,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
             ),
 
             // Tiger character
@@ -289,39 +316,6 @@ class LandingPage extends StatelessWidget {
               ),
             ),
 
-            // Start button (Mulai)
-            Positioned(
-              bottom: size.height * 0.18,
-              right: size.width * 0.2,
-              child: Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MenuPage()),
-                    ); // Navigate to the game screen
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF88FF00),
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: size.width * 0.05,
-                        vertical: size.height * 0.02),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                  child: Text(
-                    'Mulai',
-                    style: TextStyle(
-                      fontSize: size.height * 0.04,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
             // Settings gear icon
             Positioned(
               top: size.height * 0.05,
@@ -349,35 +343,6 @@ class LandingPage extends StatelessWidget {
     return const CustomPaint(
       size: Size(20, 10),
       painter: BirdPainter(),
-    );
-  }
-
-  Widget _buildFence(Size size) {
-    final postWidth = size.width * 0.02;
-    final postHeight = size.height * 0.15;
-    final postGap = size.width * 0.005;
-
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(
-        5,
-        (index) => Container(
-          margin: EdgeInsets.only(right: postGap),
-          width: postWidth,
-          height: postHeight,
-          decoration: BoxDecoration(
-            color: const Color(0xFFEEDDCC),
-            borderRadius: BorderRadius.circular(5),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black26,
-                offset: Offset(2, 2),
-                blurRadius: 2,
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
@@ -450,6 +415,218 @@ class GroundPathPainter extends CustomPainter {
       );
 
     canvas.drawPath(path, pathPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+// Menu Selection Screen that appears after pressing "Mulai" button
+class MenuSelectionScreen extends StatelessWidget {
+  const MenuSelectionScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/menu_background.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Stack(
+          children: [
+            // Top left home button
+            Positioned(
+              top: size.height * 0.1,
+              left: size.width * 0.05,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.all(8),
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Icon(
+                    Icons.home,
+                    color: Colors.white,
+                    size: 40,
+                  ),
+                ),
+              ),
+            ),
+
+            // Title "Menu Select" at top
+            Positioned(
+              top: 10,
+              left: 10,
+              child: Text(
+                "Menu Select",
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.7),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+
+            // Top-right rainbow corner
+            Positioned(
+              top: 0,
+              right: 0,
+              child: CustomPaint(
+                size: Size(size.width * 0.2, size.height * 0.15),
+                painter: RainbowCornerPainter(),
+              ),
+            ),
+
+            // Menu Options Grid
+            Positioned(
+              top: size.height * 0.22,
+              left: size.width * 0.05,
+              right: size.width * 0.05,
+              bottom: size.height * 0.1,
+              child: GridView.count(
+                crossAxisCount: 3,
+                childAspectRatio: 1.1,
+                physics: const NeverScrollableScrollPhysics(),
+                mainAxisSpacing: 20,
+                crossAxisSpacing: 20,
+                children: [
+                  _buildGameOption(
+                    context,
+                    'Tebak\nGambar',
+                    'assets/images/tebak_gambar.png',
+                    Colors.blue.withOpacity(0.7),
+                  ),
+                  _buildGameOption(
+                    context,
+                    'Tebak\nSuara',
+                    'assets/images/tebak_suara.png',
+                    Colors.blue.withOpacity(0.7),
+                  ),
+                  _buildGameOption(
+                    context,
+                    'Nama\nBuah',
+                    'assets/images/nama_buah.png',
+                    Colors.yellow.withOpacity(0.7),
+                  ),
+                  _buildGameOption(
+                    context,
+                    'Tebak\nHuruf',
+                    'assets/images/tebak_huruf.png',
+                    Colors.pink.withOpacity(0.7),
+                  ),
+                  _buildGameOption(
+                    context,
+                    'Tebak\nBentuk',
+                    'assets/images/tebak_bentuk.png',
+                    Colors.red.withOpacity(0.7),
+                  ),
+                  // Tiger character at bottom right
+                  Container(
+                    padding: const EdgeInsets.all(15),
+                    child: Image.asset(
+                      'assets/images/tiger.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGameOption(
+      BuildContext context, String title, String imagePath, Color color) {
+    return Container(
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Stack(
+        children: [
+          // Game image
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(
+                imagePath,
+                height: 100,
+              ),
+            ),
+          ),
+
+          // Game title at bottom
+          Positioned(
+            bottom: 10,
+            left: 0,
+            right: 0,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 5),
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  shadows: [
+                    Shadow(
+                      offset: Offset(1, 1),
+                      blurRadius: 2,
+                      color: Colors.black54,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class RainbowCornerPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final List<Color> colors = [
+      Colors.red,
+      Colors.orange,
+      Colors.yellow,
+      Colors.green,
+      Colors.blue,
+      Colors.indigo,
+      Colors.purple,
+    ];
+
+    final double stripeHeight = size.height / colors.length;
+
+    for (int i = 0; i < colors.length; i++) {
+      final paint = Paint()
+        ..color = colors[i]
+        ..style = PaintingStyle.fill;
+
+      final path = Path()
+        ..moveTo(size.width - (i * size.width / colors.length), 0)
+        ..lineTo(size.width, 0)
+        ..lineTo(size.width, i * stripeHeight)
+        ..close();
+
+      canvas.drawPath(path, paint);
+    }
   }
 
   @override
