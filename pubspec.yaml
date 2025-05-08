@@ -22,7 +22,14 @@ flutter:
   uses-material-design: true
   
   assets:
+    - assets/images/backgroundtebakgambar.png  
     - assets/images/tiger.png
+    - assets/images/monyet.png
+    - assets/images/jerapah.png
+    - assets/images/gajah.png
+    - assets/images/anjing.png
+    - assets/images/panda.png
+    - assets/images/singa.png
     
   fonts:
     - family: Bubblegum
